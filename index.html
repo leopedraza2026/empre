@@ -75,9 +75,8 @@
         .nav-item:hover { color: var(--accent-orange); }
 
         /* --- VISTA HOME --- */
-        /* Agregamos la clase view-section pero mantenemos el estilo de pantalla completa */
         #view-home {
-            padding: 0 !important; /* Sobrescribimos el padding de .view-section */
+            padding: 0 !important; 
             min-height: 90vh;
             display: flex;
             align-items: center;
@@ -188,13 +187,13 @@
         
         .store-info { padding: 0 20px; }
         .store-name { font-size: 1.3rem; font-weight: 800; color: var(--primary-blue); margin-bottom: 5px; }
-        .store-seller { color: var(--text-light); font-size: 0.9rem; margin-bottom: 15px; }
+        .store-seller { color: var(--text-light); font-size: 0.9rem; margin-bottom: 5px; }
+        .store-loc { display: inline-block; background: #eee; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; color: #555; margin-bottom: 15px; }
 
         /* --- OTRAS VISTAS --- */
         .view-section { 
             padding: 4rem 0; 
             min-height: 80vh; 
-            /* Animación instantánea */
             animation: snapIn 0.2s ease forwards;
         }
         
@@ -260,7 +259,6 @@
             <nav>
                 <ul class="nav-links">
                     <li class="nav-item" onclick="showView('home')" style="color: var(--primary-blue);">Inicio</li>
-                    <!-- Links Directos -->
                     <li class="nav-item" onclick="showView('catalog')">Explora todo</li> 
                     <li class="nav-item" onclick="showView('stores')">Mini Tienda</li>
                     <li class="nav-item" id="nav-access" onclick="showView('login')">Acceso</li>
@@ -275,7 +273,6 @@
     <main>
         
         <!-- 1. HOME -->
-        <!-- CAMBIO CLAVE: Se añadió class="view-section" para que desaparezca instantáneamente -->
         <section id="view-home" class="view-section">
             <div class="hero-content">
                 <h1 class="hero-title">Tu Estilo, Tu Negocio</h1>
@@ -303,9 +300,26 @@
 
         <!-- 2. MINI TIENDA (LISTADO) -->
         <section id="view-stores" class="view-section hidden container">
-            <div class="catalog-header" style="text-align: center;">
-                <h2 style="font-family:'Playfair Display', serif; color: var(--primary-blue); margin-bottom: 0.5rem;">Mini Tiendas de Emprendedores</h2>
-                <p style="color: #666;">Descubre las tiendas exclusivas de nuestros vendedores</p>
+            <div class="catalog-header">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                    <h2 style="font-family:'Playfair Display', serif; color: var(--primary-blue);">Mini Tiendas</h2>
+                </div>
+                
+                <!-- NUEVO: Filtro de Departamentos para Tiendas -->
+                <div class="filters-row">
+                    <select id="store-dept-filter" class="filter-select" onchange="renderStoresList()">
+                        <option value="all">🇧🇴 Todo Bolivia</option>
+                        <option value="La Paz">La Paz</option>
+                        <option value="Santa Cruz">Santa Cruz</option>
+                        <option value="Cochabamba">Cochabamba</option>
+                        <option value="Oruro">Oruro</option>
+                        <option value="Potosí">Potosí</option>
+                        <option value="Chuquisaca">Sucre</option>
+                        <option value="Tarija">Tarija</option>
+                        <option value="Beni">Beni</option>
+                        <option value="Pando">Pando</option>
+                    </select>
+                </div>
             </div>
             <div class="stores-grid" id="stores-list-grid">
                 <!-- JS -->
@@ -329,7 +343,7 @@
             </div>
         </section>
 
-        <!-- 4. ADMIN (SIMPLIFICADO) -->
+        <!-- 4. ADMIN -->
         <section id="view-admin" class="view-section hidden container">
             <div class="seller-card" style="text-align: center;">
                 <h2 style="font-family:'Playfair Display', serif; margin-bottom: 1.5rem;">Gestión de Vendedores</h2>
@@ -369,11 +383,27 @@
                     <!-- 2. CONFIGURAR MINI TIENDA -->
                     <div class="seller-card" style="margin-top:20px; border-left: 5px solid var(--accent-gold);">
                         <h3 style="margin-bottom: 1rem;">🏪 Configurar Mi Mini Tienda</h3>
-                        <p style="font-size:0.85rem; color:#666; margin-bottom:15px;">Estos datos se mostrarán en el botón "Mini Tienda" del inicio.</p>
+                        <p style="font-size:0.85rem; color:#666; margin-bottom:15px;">Define cómo se verá tu tienda en el público.</p>
                         
                         <div class="form-group">
                             <label>Nombre de la Tienda</label>
                             <input type="text" id="store-name-input" class="form-control" placeholder="Ej: Modas de Carla">
+                        </div>
+
+                        <!-- NUEVO: Selección de Departamento para la Tienda -->
+                        <div class="form-group">
+                            <label>📍 Ubicación de la Tienda</label>
+                            <select id="store-dept-input" class="form-control">
+                                <option value="La Paz">La Paz</option>
+                                <option value="Santa Cruz">Santa Cruz</option>
+                                <option value="Cochabamba">Cochabamba</option>
+                                <option value="Oruro">Oruro</option>
+                                <option value="Potosí">Potosí</option>
+                                <option value="Chuquisaca">Sucre</option>
+                                <option value="Tarija">Tarija</option>
+                                <option value="Beni">Beni</option>
+                                <option value="Pando">Pando</option>
+                            </select>
                         </div>
 
                         <div class="img-uploads-grid">
@@ -486,7 +516,7 @@
                 <div style="display:flex; flex-direction:column; gap:25px;">
                     <div class="seller-card" style="padding: 1.5rem; background: #e3f2fd; border: 1px solid #bbdefb;">
                         <h4 style="color: var(--primary-blue);">💡 Tip</h4>
-                        <p style="font-size:0.9rem; color:#555;">Cuanto mejor sea tu portada y logo, más clientes entrarán a tu tienda desde el inicio.</p>
+                        <p style="font-size:0.9rem; color:#555;">Selecciona tu departamento correctamente para que los clientes locales te encuentren más fácil.</p>
                     </div>
 
                     <div class="seller-card" style="flex-grow:1; padding: 1.5rem; overflow-y: auto; max-height: 500px;">
@@ -532,11 +562,13 @@
         const defaultUsers = [
             { 
                 user: 'admin', pass: '1234', role: 'admin', phone: '61348083', 
-                storeName: 'Oficial BO', storeLogo: 'https://picsum.photos/seed/logo1/100/100', storeCover: 'https://picsum.photos/seed/cover1/300/150', fullname: 'Administrador'
+                storeName: 'Oficial BO', storeLogo: 'https://picsum.photos/seed/logo1/100/100', storeCover: 'https://picsum.photos/seed/cover1/300/150', fullname: 'Administrador',
+                storeDept: 'La Paz' // NUEVO CAMPO
             },
             { 
                 user: 'vendedor', pass: '1234', role: 'vendedor', phone: '71234567', 
-                storeName: 'Modas Juan', storeLogo: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=150', storeCover: 'https://images.unsplash.com/photo-1558171813-4c088753af8f?q=80&w=300', fullname: 'Juan Pérez'
+                storeName: 'Modas Juan', storeLogo: 'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=150', storeCover: 'https://images.unsplash.com/photo-1558171813-4c088753af8f?q=80&w=300', fullname: 'Juan Pérez',
+                storeDept: 'Santa Cruz' // NUEVO CAMPO
             }
         ];
 
@@ -560,22 +592,13 @@
             localStorage.setItem('bo_products', JSON.stringify(products));
         }
 
-        // --- NAVEGACIÓN (OPTIMIZADA PARA DIRECTO) ---
+        // --- NAVEGACIÓN ---
         function showView(viewName) {
-            // 1. Scroll directo arriba ANTES de cambiar la vista
             window.scrollTo(0,0);
-
-            // 2. Ocultar todas las vistas con clase view-section
-            // Ahora #view-home SI se ocultará porque tiene la clase
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
-            
-            // 3. Mostrar la vista objetivo
             const target = document.getElementById('view-' + viewName);
-            if(target) {
-                target.classList.remove('hidden');
-            }
+            if(target) target.classList.remove('hidden');
 
-            // 4. Cargar datos específicos
             if(viewName === 'catalog') filterProducts();
             if(viewName === 'admin') renderUsers();
             if(viewName === 'seller') loadSellerPanel();
@@ -590,7 +613,6 @@
             
             if(found) {
                 currentUser = found;
-                // No hay alerta de bienvenida
                 updateNav();
                 showView('seller'); 
                 if(found.role === 'admin') showView('admin');
@@ -633,6 +655,9 @@
             const grid = document.getElementById('stores-list-grid');
             grid.innerHTML = '';
 
+            // NUEVO: Leer filtro de departamento
+            const deptFilter = document.getElementById('store-dept-filter').value;
+
             const sellersWithStore = users.filter(u => u.role === 'vendedor' && u.storeName);
 
             if(sellersWithStore.length === 0) {
@@ -641,6 +666,9 @@
             }
 
             sellersWithStore.forEach(s => {
+                // FILTRO: Si no coincide con el departamento, no mostrar
+                if(deptFilter !== 'all' && s.storeDept !== deptFilter) return;
+
                 const card = document.createElement('div');
                 card.className = 'store-card';
                 const logo = s.storeLogo || 'https://via.placeholder.com/80?text=Logo';
@@ -654,6 +682,7 @@
                     <div class="store-info">
                         <h3 class="store-name">${s.storeName}</h3>
                         <p class="store-seller">Vendedor: ${s.fullname || s.user}</p>
+                        <div class="store-loc">📍 ${s.storeDept || 'Bolivia'}</div>
                         <button class="btn btn-blue btn-sm" onclick="enterSellerStore('${s.user}')">Ir a Tienda</button>
                     </div>
                 `;
@@ -673,6 +702,9 @@
             document.getElementById('profile-fullname').value = currentUser.fullname || '';
             document.getElementById('profile-phone').value = currentUser.phone || '';
             document.getElementById('store-name-input').value = currentUser.storeName || '';
+            
+            // NUEVO: Cargar departamento de tienda
+            document.getElementById('store-dept-input').value = currentUser.storeDept || 'La Paz';
             
             if(currentUser.storeLogo) {
                 const prevLogo = document.querySelector('#preview-box-logo img');
@@ -752,22 +784,26 @@
 
         function saveStoreConfig() {
             const name = document.getElementById('store-name-input').value;
+            const dept = document.getElementById('store-dept-input').value; // NUEVO: Leer departamento
+
             if(!name) return alert("Ponle un nombre a tu tienda.");
             
             users = users.map(u => {
                 if(u.user === currentUser.user) {
                     u.storeName = name;
+                    u.storeDept = dept; // NUEVO: Guardar departamento
                     if(tempStoreLogo) u.storeLogo = tempStoreLogo;
                     if(tempStoreCover) u.storeCover = tempStoreCover;
                 }
                 return u;
             });
             currentUser.storeName = name;
+            currentUser.storeDept = dept;
             if(tempStoreLogo) currentUser.storeLogo = tempStoreLogo;
             if(tempStoreCover) currentUser.storeCover = tempStoreCover;
             
             saveData();
-            alert("¡Mini Tienda configurada!");
+            alert("¡Mini Tienda configurada con ubicación!");
         }
 
         function previewProductImage(e) {
