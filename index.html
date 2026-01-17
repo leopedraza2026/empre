@@ -28,7 +28,6 @@
             color: var(--text-dark); 
             padding-bottom: 2rem; 
             overflow-x: hidden;
-            /* Eliminamos scroll-behavior: smooth para que salte directo */
         }
         
         a { text-decoration: none; color: inherit; transition: 0.3s; }
@@ -76,8 +75,9 @@
         .nav-item:hover { color: var(--accent-orange); }
 
         /* --- VISTA HOME --- */
+        /* Agregamos la clase view-section pero mantenemos el estilo de pantalla completa */
         #view-home {
-            padding: 0;
+            padding: 0 !important; /* Sobrescribimos el padding de .view-section */
             min-height: 90vh;
             display: flex;
             align-items: center;
@@ -275,7 +275,8 @@
     <main>
         
         <!-- 1. HOME -->
-        <section id="view-home">
+        <!-- CAMBIO CLAVE: Se añadió class="view-section" para que desaparezca instantáneamente -->
+        <section id="view-home" class="view-section">
             <div class="hero-content">
                 <h1 class="hero-title">Tu Estilo, Tu Negocio</h1>
                 <p class="hero-subtitle">Conectando a los mejores emprendedores de moda con clientes en todo Bolivia. Crea tu mini tienda o explora miles de opciones.</p>
@@ -564,7 +565,8 @@
             // 1. Scroll directo arriba ANTES de cambiar la vista
             window.scrollTo(0,0);
 
-            // 2. Ocultar todas las vistas
+            // 2. Ocultar todas las vistas con clase view-section
+            // Ahora #view-home SI se ocultará porque tiene la clase
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
             
             // 3. Mostrar la vista objetivo
@@ -588,9 +590,9 @@
             
             if(found) {
                 currentUser = found;
-                // ALERTA ELIMINADA: Ya no dice "Bienvenido"
+                // No hay alerta de bienvenida
                 updateNav();
-                showView('seller'); // Si es admin, lo corregiremos abajo
+                showView('seller'); 
                 if(found.role === 'admin') showView('admin');
             } else {
                 alert('Datos incorrectos.');
@@ -668,11 +670,8 @@
         function loadSellerPanel() {
             document.getElementById('seller-name-display').innerText = currentUser.user || 'Vendedor';
             
-            // Cargar Perfil
             document.getElementById('profile-fullname').value = currentUser.fullname || '';
             document.getElementById('profile-phone').value = currentUser.phone || '';
-            
-            // Cargar Configuración Tienda
             document.getElementById('store-name-input').value = currentUser.storeName || '';
             
             if(currentUser.storeLogo) {
@@ -686,7 +685,6 @@
                 document.getElementById('preview-box-cover').style.display = 'block';
             }
 
-            // Lista productos
             const list = document.getElementById('my-products-list');
             list.innerHTML = '';
             const myProds = products.filter(p => p.seller === currentUser.user);
