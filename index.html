@@ -290,7 +290,8 @@
             <nav>
                 <ul class="nav-links" id="nav-links-list">
                     <li class="nav-item" onclick="showView('home'); toggleMenu()" style="color: var(--primary-blue);">Inicio</li>
-                    <li class="nav-item" onclick="showView('catalog'); toggleMenu()">Explora todo</li> 
+                    <!-- SOLUCIÓN: Agregado resetFilters() aquí -->
+                    <li class="nav-item" onclick="resetFilters(); showView('catalog'); toggleMenu()">Explora todo</li> 
                     <li class="nav-item" onclick="showView('stores'); toggleMenu()">Mini Tienda</li>
                     <li class="nav-item" id="nav-access" onclick="showView('login'); toggleMenu()">Acceso</li>
                     <li class="nav-item hidden" id="nav-seller" onclick="showView('seller'); toggleMenu()">Mi Panel</li>
@@ -317,7 +318,8 @@
                 </div>
 
                 <div class="hero-buttons">
-                    <button class="btn btn-gold" onclick="showView('catalog')">
+                    <!-- SOLUCIÓN: Agregado resetFilters() aquí -->
+                    <button class="btn btn-gold" onclick="resetFilters(); showView('catalog')">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                         Explora todo
                     </button>
@@ -591,6 +593,20 @@
     </main>
 
     <script>
+        // --- NUEVA FUNCIÓN PARA SOLUCIONAR EL PROBLEMA ---
+        function resetFilters() {
+            // Limpia la variable que bloquea la vista a una sola tienda
+            filterSeller = null; 
+            
+            // Restablece los controles visuales
+            document.getElementById('dept-filter').value = 'all';
+            document.getElementById('search-input').value = '';
+            
+            // Restaura los títulos originales
+            document.getElementById('catalog-title').innerText = "Explora todo";
+            document.getElementById('catalog-subtitle').innerText = "Buscando en todo Bolivia";
+        }
+
         // --- SISTEMA DE NOTIFICACIONES (TOAST) ---
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
